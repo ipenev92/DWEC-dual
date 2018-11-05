@@ -1,8 +1,8 @@
 let DIARY = [];
 
-// Function that adds events to the diary.
-function addEntry(events, octopus) {
-  DIARY.push({events, octopus});
+// Function that adds item to the diary. Item is an array and octupus is a boolean.
+function addEntry(item, octopus) {
+  DIARY.push({item, octopus});
 }
 
 
@@ -29,7 +29,7 @@ function tableFor(event, journal) {
   let table = [0, 0, 0, 0];
   for (let i=0; i < journal.length; i++) {
     let entry = journal[i], index = 0;
-    if (entry.events.includes(event)) index += 1;
+    if (entry.item.includes(event)) index += 1;
     if (entry.octopus) index += 2;
     table[index] += 1;
   }
@@ -38,59 +38,52 @@ function tableFor(event, journal) {
 }
 
 
-// Creating a list in which we store all the different events.
-function journalEvents(journal) {
-  let events = [];
+// Creating a list in which we store all the different item.
+function journalitem(journal) {
+  let item = [];
   for (let entry of journal) {
-    for (let event of entry.events) {
-      if (!events.includes(event)) {
-        events.push(event);
+    for (let event of entry.item) {
+      if (!item.includes(event)) {
+        item.push(event);
       }
     }
   }
-  return events;
+  return item;
 }
 
-// Creates a list in which we add all the events and their corresponding correlation.
+// Creates a list in which we add all the item and their corresponding correlation.
 function showCorrelation(journal) {
-  let events = [];
-  for (let event of journalEvents(journal)) {
+  let item = [];
+  for (let event of journalitem(journal)) {
     let corr = correlation(tableFor(event, journal));
-    events.push({event, corr});
+    item.push({event, corr});
   }
 
-  return events;
+  return item;
 }
 
-// Tells us why Mariano becomes an Octopus.
-function whyOctopus() {
+// Tells us the reason why Mariano transforms and the exception to the rule.
+function whenOctopus() {
   let highest = 0;
+  let lowest = 0;
   let reason;
   for (let event of showCorrelation(DIARY)) {
     if (event['corr'] > highest) {
       highest = event['corr'];
-      reason = event['event'];
+      highest_reason = event['event'];
     }
-  }
 
-  return reason + ".";
-}
-
-function whyNoOctopus() {
-  let lowest = 0;
-  let reason;
-  for (let event of showCorrelation(DIARY)) {
     if (event['corr'] < lowest) {
       lowest = event['corr'];
-      reason = event['event'];
+      lowest_reason = event['event'];
     }
   }
 
-  if (reason == "brushed teeth") {
-  	return "brushed his teeth.";
-  } else {
-  	return reason + ".";
-  }
+  if (lowest_reason == "brushed teeth") {
+  	lowest_reason = "brushes his teeth.";
+  } 
+
+  return [highest_reason + ".", lowest_reason]
 }
 
 // Adding all the test cases from David into the diary.
@@ -186,9 +179,9 @@ addEntry(["bread","brushed teeth","television","weekend"], false);
 addEntry(["cauliflower","peanuts","brushed teeth","weekend"], false);
 
 // Final outputs
-console.log("The reason why Mariano becomes an octopus is: eating", whyOctopus(), "He transforms every time except when he", whyNoOctopus());
+console.log("The reason why Mariano becomes an octopus is: eating", whenOctopus()[0], "He transforms every time except when he", whenOctopus()[1]);
 console.log("");
-console.log("List of events and their correlation:")
+console.log("List of item and their correlation:")
 for (let event of showCorrelation(DIARY)) {
   console.log(event['event'] + ": " + roundToTwo(event['corr']));
 }
