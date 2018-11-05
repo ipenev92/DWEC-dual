@@ -76,6 +76,23 @@ function whyOctopus() {
   return reason + ".";
 }
 
+function whyNoOctopus() {
+  let lowest = 0;
+  let reason;
+  for (let event of showCorrelation(DIARY)) {
+    if (event['corr'] < lowest) {
+      lowest = event['corr'];
+      reason = event['event'];
+    }
+  }
+
+  if (reason == "brushed teeth") {
+  	return "brushed his teeth.";
+  } else {
+  	return reason + ".";
+  }
+}
+
 // Adding all the test cases from David into the diary.
 addEntry(["carrot","exercise","weekend"], false);
 addEntry(["bread","pudding","brushed teeth","weekend","touched tree"], false);
@@ -169,7 +186,7 @@ addEntry(["bread","brushed teeth","television","weekend"], false);
 addEntry(["cauliflower","peanuts","brushed teeth","weekend"], false);
 
 // Final outputs
-console.log("Reason why Mariano becomes an octopus: ", whyOctopus());
+console.log("The reason why Mariano becomes an octopus is: eating", whyOctopus(), "He transforms every time except when he", whyNoOctopus());
 console.log("");
 console.log("List of events and their correlation:")
 for (let event of showCorrelation(DIARY)) {
